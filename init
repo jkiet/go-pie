@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# type source ./init to init paths
+
+# mkdir -p ~/go/1.4.2
+# cd ~/go/1.4.2
+# wget "http://dave.cheney.net/paste/go1.4.2.linux-arm~multiarch-armv6-1.tar.gz"
+# tar -xvzf go1.4.2.linux-arm~multiarch-armv6-1.tar.gz
+
+export GOROOT=~/go/1.4.2
+export PATH=$PATH:$GOROOT/bin
+
+#
+# Golang project structure
+# GOPATH
+#  src
+#   src_package (github.com/jkiet/go-pi
+#   external_package (dependencies)
+#  pkg
+#  bin
+PROJECT_DIR=`pwd`
+PACKAGE="github.com/jkiet/go-pie"
+SRC_PATH="/src/$PACKAGE"
+export GOPATH=${PROJECT_DIR%$SRC_PATH}
+
