@@ -35,7 +35,7 @@ Time unit for patterns is 100ms.
 
 - turn off lamp 0
 ```
-{"0":"1"}
+{"0":"0"}
 ```
 
 - flash lamp 2 for 2s
@@ -60,18 +60,19 @@ Time unit for patterns is 100ms.
 - download golang package for your architecture and setup GOROOT (and add to GOPATH $GOROOT/bin) with it
 - clone this repo to your golang project directory structure (ie. to: ~/goworkspace/src/github.com/jkiet/go-pie)
 - you can invoke init script to setup environment variables (see coments inside)
-	
-	source ./init
-
+```
+source ./init
+```
 - download dependencies
-
-	go get
-
+```
+go get
+```
 - build
-
-	go build
-
+```
+go build
+```
 - run as root
-
-	sudo ./go-pie
+```
+sudo ./go-pie
+```
 
