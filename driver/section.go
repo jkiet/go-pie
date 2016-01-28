@@ -3,39 +3,31 @@ package driver
 import (
 	"errors"
 	"fmt"
+	"github.com/jkiet/go-pie/config"
 	"github.com/stianeikeland/go-rpio"
 	"strconv"
 	"strings"
 	"time"
 )
 
-const (
-	SECTION uint64 = 0
-)
-
-// our order to PI GPIO
-var layout = map[uint64]rpio.Pin{
-	0: 2, // GPIO2
-	1: 3,
-	2: 4,
-}
-
 type Section struct {
-	Lamps map[uint64]*Lamp
+	Section uint64
+	Lamps   map[uint64]*Lamp
 }
 
 func NewSection() *Section {
-	return &Section{}
+	return &Section{Section: 0}
 }
 
-func (s *Section) Init() (err error) {
+func (s *Section) Init(c *config.Config) (err error) {
 	err = rpio.Open()
 	if err != nil {
 		return
 	}
+	s.Section = c.Section
 	s.Lamps = make(map[uint64]*Lamp)
-	for l, p := range layout {
-		s.Lamps[l] = NewLamp(rpio.Pin(p))
+	for l, p := range c.Layout {
+		s.Lamps[uint64(l)] = NewLamp(rpio.Pin(p))
 	}
 	ticker := time.NewTicker(time.Millisecond * 100).C
 	go func() {
@@ -59,8 +51,8 @@ func (this *Section) Reload(commands map[string]string) (status map[string]strin
 			status[k] = fmt.Sprintf("Parse error (%v=>%v) : %v", k, v, err)
 			continue
 		}
-		if s != SECTION {
-			status[k] = fmt.Sprintf("I'm not target section (this section: %v , target section: %v)", SECTION, s)
+		if s != this.Section {
+			status[k] = fmt.Sprintf("I'm not target section (this section: %v , target section: %v)", this.Section, s)
 			continue
 		}
 		if lamp, exists := this.Lamps[l]; exists {
@@ -90,7 +82,7 @@ func (this *Section) parseKV(k, v string) (s, l, tO, tP, tT uint64, err error) {
 			return
 		}
 	} else {
-		s = SECTION
+		s = this.Section
 		l, err = strconv.ParseUint(k, 10, 32)
 		if err != nil {
 			return

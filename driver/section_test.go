@@ -11,8 +11,8 @@ func TestParseDefaults(t *testing.T) {
 		t.Errorf("Got error: %v", err)
 		return
 	}
-	if s != SECTION {
-		t.Errorf("Expected section: %v ; got: %v", SECTION, s)
+	if s != section.Section {
+		t.Errorf("Expected section: %v ; got: %v", section.Section, s)
 		return
 	}
 	if l != 2 {

@@ -59,7 +59,7 @@ Time unit for patterns is 100ms.
 ## How to build
 - download golang package for your architecture and setup GOROOT (and add to GOPATH $GOROOT/bin) with it
 - clone this repo to your golang project directory structure (ie. to: ~/goworkspace/src/github.com/jkiet/go-pie)
-- you can invoke init script to setup environment variables (see coments inside)
+- you can invoke init script to setup environment variables (see comments inside)
 ```
 source ./init
 ```
@@ -76,3 +76,45 @@ go build
 sudo ./go-pie
 ```
 
+## Examples
+
+- config file
+```
+section: 0
+layout: [25, 24, 23, 18, 22, 27, 17, 4]
+```
+- run as restful service
+```
+sudo ./go-pie listen 0.0.0.0:8888 config.yml
+```
+- send command
+```
+curl -i -XPOST -H'Content-Type: application/json' -d'{"0":"1 10", "1":"1 20", "2":"1 30", "3":"1 40", "4": "1 50", "5": "1 60", "6":"1 70", "7":"1 80"}' http://127.0.0.1:8888/lamps/reload/
+```
+expected response looks like this:
+```
+HTTP/1.1 200 OK                                                                                                                                                                                                  
+Content-Type: application/json
+Date: Thu, 28 Jan 2016 23:33:06 GMT
+Content-Length: 167
+
+{
+  "data": {
+   "0": "OK",
+   "1": "OK",
+   "2": "OK",
+   "3": "OK",
+   "4": "OK",
+   "5": "OK",
+   "6": "OK",
+   "7": "OK"
+  },
+  "_meta": {
+   "status": "ok"
+  }
+```
+
+- another command
+```
+curl -i -XPOST -H'Content-Type: application/json' -d'{"0":"1/9", "1":"2/9", "2":"3/9", "3":"4/9", "4": "4/9", "5": "3/9", "6":"2/9", "7":"1/9"}' http://127.0.0.1:8888/lamps/reload/
+```
